@@ -13,17 +13,36 @@ const AddTaskForm = (props) => {
   const descChangeHandler = (e) => {
     setdescription(e.target.value);
   };
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(todoSliceActions.addTodo({ title, description }));
-    props.closeAddTask(false);
+    try {
+      const res = await fetch("/api/todo", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          description,
+        }),
+        next: { revalidate: 0 },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("invalid");
+      }
+
+      dispatch(todoSliceActions.addTodo({ title, description }));
+      props.closeAddTask(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <section>
       <h1 className="text-center">Add Your Task here</h1>
       <form onSubmit={submitHandler}>
-        <div class="relative mb-2">
-          <label for="Title" class="leading-7 text-sm text-gray-600">
+        <div className="relative mb-2">
+          <label htmlFor="Title" className="leading-7 text-sm text-gray-600">
             Title
           </label>
           <input
@@ -33,11 +52,11 @@ const AddTaskForm = (props) => {
             name="Title"
             onChange={titleChangeHandler}
             value={title}
-            class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700  px-3 leading-8 transition-colors duration-200 ease-in-out"
+            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700  px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
         </div>
-        <div class="relative mb-2">
-          <label for="desc" class="leading-7 text-sm text-gray-600 ">
+        <div className="relative mb-2">
+          <label htmlFor="desc" className="leading-7 text-sm text-gray-600 ">
             Description
           </label>
           <input
@@ -46,12 +65,12 @@ const AddTaskForm = (props) => {
             name="desc"
             onChange={descChangeHandler}
             value={description}
-            class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700  px-3 leading-8 transition-colors duration-200 ease-in-out"
+            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700  px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
         </div>
         <button
           type="submit"
-          class="text-white bg-indigo-500 border-0 py-1 px-8 focus:outline-none hover:bg-indigo-600 rounded"
+          className="text-white bg-indigo-500 border-0 py-1 px-8 focus:outline-none hover:bg-indigo-600 rounded"
         >
           Add
         </button>

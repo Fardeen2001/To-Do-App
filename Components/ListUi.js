@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import AddTaskForm from "./AddTaskForm";
 import { useDispatch, useSelector } from "react-redux";
 import { todoSliceActions } from "@/ReduxStore/todo";
 import Link from "next/link";
 
-const ListUi = () => {
+const ListUi = (props) => {
   const [showAddTask, setShowAddTask] = useState(false);
   const dispatch = useDispatch();
 
@@ -19,6 +19,9 @@ const ListUi = () => {
   const addTaskHandler = () => {
     setShowAddTask((show) => !show);
   };
+  useEffect(() => {
+    dispatch(todoSliceActions.replaceTodo(props.todoData));
+  }, [dispatch, props.todoData]);
 
   return (
     <>

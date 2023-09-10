@@ -4,11 +4,14 @@ const todoSlice = createSlice({
   name: "todoList",
   initialState: initialtodo,
   reducers: {
+    replaceTodo: (state, action) => {
+      state.todoList = action.payload;
+    },
     addTodo: (state, action) => {
       const newTodo = action.payload;
 
       state.todoList.push({
-        id: Math.random() * 10,
+        id: newTodo._id,
         title: newTodo.title,
         description: newTodo.description,
       });
