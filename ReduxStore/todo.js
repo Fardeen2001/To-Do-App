@@ -11,25 +11,26 @@ const todoSlice = createSlice({
       const newTodo = action.payload;
 
       state.todoList.push({
-        id: newTodo._id,
+        _id: (Math.random() * 10).toString(),
         title: newTodo.title,
         description: newTodo.description,
+        status: newTodo.status,
       });
     },
     deleteTodo: (state, action) => {
       state.todoList = state.todoList.filter(
-        (item) => item.id !== action.payload
+        (item) => item._id !== action.payload
       );
     },
     completedTodo: (state, action) => {
       const completedTaskId = action.payload;
       const completedTask = state.todoList.find(
-        (item) => item.id === completedTaskId
+        (item) => item._id === completedTaskId
       );
       if (completedTask) {
         state.completedTodo.push(completedTask);
         state.todoList = state.todoList.filter(
-          (item) => item.id !== action.payload
+          (item) => item._id !== action.payload
         );
       }
     },

@@ -19,8 +19,9 @@ const AddTaskForm = (props) => {
       const res = await fetch("/api/todo", {
         method: "POST",
         body: JSON.stringify({
-          title,
-          description,
+          title: title,
+          description: description,
+          status: "inComplete",
         }),
         next: { revalidate: 0 },
         headers: {
@@ -31,7 +32,13 @@ const AddTaskForm = (props) => {
         throw new Error("invalid");
       }
 
-      dispatch(todoSliceActions.addTodo({ title, description }));
+      dispatch(
+        todoSliceActions.addTodo({
+          title: title,
+          description: description,
+          status: "inComplete",
+        })
+      );
       props.closeAddTask(false);
     } catch (error) {
       console.error(error);

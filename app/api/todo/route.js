@@ -19,12 +19,12 @@ export async function GET(request) {
 }
 
 export async function POST(req) {
-  const { title, description } = await req.json();
+  const { title, description, status } = await req.json();
   const client = await MongoClient.connect(ConnectionStr);
   const db = client.db();
   const todoCollection = db.collection("todoList");
-  await todoCollection.insertOne({ title, description });
+  await todoCollection.insertOne({ title, description, status });
   client.close();
 
-  return NextResponse.json({ title, description }, { status: 201 });
+  return NextResponse.json({ title, description, status }, { status: 201 });
 }

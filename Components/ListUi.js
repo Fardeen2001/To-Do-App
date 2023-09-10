@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AiFillDelete } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
+import { BiSolidEditAlt } from "react-icons/bi";
 import AddTaskForm from "./AddTaskForm";
 import { useDispatch, useSelector } from "react-redux";
 import { todoSliceActions } from "@/ReduxStore/todo";
@@ -16,6 +17,7 @@ const ListUi = (props) => {
   }/${current.getFullYear()}`;
 
   const todoList = useSelector((state) => state.todo.todoList);
+
   const addTaskHandler = () => {
     setShowAddTask((show) => !show);
   };
@@ -41,7 +43,7 @@ const ListUi = (props) => {
             {todoList &&
               todoList.map((item) => (
                 <li
-                  key={item.id}
+                  key={+item._id}
                   className="flex justify-between text-center bg-indigo-100 p-2 rounded-lg mt-2"
                 >
                   <input
@@ -50,7 +52,7 @@ const ListUi = (props) => {
                     id="listId"
                     onChange={(e) => {
                       if (e.target.checked === true) {
-                        dispatch(todoSliceActions.completedTodo(item.id));
+                        dispatch(todoSliceActions.completedTodo(item._id));
                       }
                     }}
                   />
@@ -62,13 +64,24 @@ const ListUi = (props) => {
                       {item.description}
                     </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      dispatch(todoSliceActions.deleteTodo(item.id));
-                    }}
-                  >
-                    <AiFillDelete />
-                  </button>
+                  <div className="status flex items-center">
+                    {" "}
+                    <p className="text-sm text-gray-500 overflow-hidden text-ellipsis">
+                      {item.status}
+                    </p>
+                  </div>
+                  <div className="buttons flex items-center space-x-2">
+                    <button>
+                      <BiSolidEditAlt />
+                    </button>
+                    <button
+                      onClick={() => {
+                        dispatch(todoSliceActions.deleteTodo(item._id));
+                      }}
+                    >
+                      <MdDelete />
+                    </button>
+                  </div>
                 </li>
               ))}
           </ol>
@@ -97,7 +110,12 @@ const ListUi = (props) => {
               Add Task
             </button>
           </div>
-          {showAddTask && <AddTaskForm closeAddTask={setShowAddTask} />}
+          {showAddTask && (
+            <AddTaskForm
+              todoData={props.todoData}
+              closeAddTask={setShowAddTask}
+            />
+          )}
         </div>
       </section>
     </>
