@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { AiFillStar } from "react-icons/ai";
 
@@ -22,10 +23,16 @@ const NavBar = () => {
             <span className="ml-3 text-xl">To-Do</span>
           </a>
           <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <a className="mr-5 hover:text-gray-900">First Link</a>
-            <a className="mr-5 hover:text-gray-900">Second Link</a>
-            <a className="mr-5 hover:text-gray-900">Third Link</a>
-            <a className="mr-5 hover:text-gray-900">Fourth Link</a>
+            <Link href={"/"} className="mr-5 hover:text-gray-900">
+              Home
+            </Link>
+            <Link href={"/completed"} className="mr-5 hover:text-gray-900">
+              Completed Tasks
+            </Link>
+            <Link href={"/"} className="mr-5 hover:text-gray-900">
+              Add Tasks
+            </Link>
+            <a className="mr-5 hover:text-gray-900">About Us</a>
           </nav>
           <button className="inline-flex items-center text-white bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
             <AiFillStar />
