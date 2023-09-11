@@ -24,6 +24,70 @@ const ListUi = (props) => {
   useEffect(() => {
     dispatch(todoSliceActions.replaceTodo(props.todoData));
   }, [dispatch, props.todoData]);
+  const deleteHandler = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/todos/${id}`, {
+        method: "DELETE",
+        cache: "no-cache",
+      });
+      if (!res.ok) {
+        throw new Error("invaild while deleting");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const isRefreshed = () => {
+    const referrer = window.location.referrer;
+    const currentUrl = window.location.href;
+    return referrer !== currentUrl;
+  };
+
+  const checkedHandler = async (item) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/todos/${item._id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            status: "completed",
+          }),
+          headers: { "Content-Type": "application/json" },
+          next: { revalidate: 0 },
+          cache: "no-cache",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("invalid while putting");
+      }
+      if (response.ok) {
+        try {
+          const res = await fetch("http://localhost:3000/api/completed", {
+            method: "POST",
+            body: JSON.stringify({
+              title: item.title,
+              description: item.description,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            next: { revalidate: 0 },
+            cache: "no-cache",
+          });
+          if (!res.ok) {
+            throw new Error("invalid");
+          }
+          if (isRefreshed()) {
+            deleteHandler(item._id);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -43,7 +107,7 @@ const ListUi = (props) => {
             {todoList &&
               todoList.map((item) => (
                 <li
-                  key={+item._id}
+                  key={item._id}
                   className="flex justify-between text-center bg-indigo-100 p-2 rounded-lg mt-2"
                 >
                   <input
@@ -53,10 +117,11 @@ const ListUi = (props) => {
                     onChange={(e) => {
                       if (e.target.checked === true) {
                         dispatch(todoSliceActions.completedTodo(item._id));
+                        checkedHandler(item);
                       }
                     }}
                   />
-                  <div className="flex flex-col">
+                  <div key={item._id} className="flex flex-col">
                     <h5 className="overflow-hidden text-ellipsis">
                       {item.title}
                     </h5>
@@ -77,6 +142,7 @@ const ListUi = (props) => {
                     <button
                       onClick={() => {
                         dispatch(todoSliceActions.deleteTodo(item._id));
+                        deleteHandler(item._id);
                       }}
                     >
                       <MdDelete />

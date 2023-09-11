@@ -7,11 +7,14 @@ const todoSlice = createSlice({
     replaceTodo: (state, action) => {
       state.todoList = action.payload;
     },
+    replaceCompletedTodo: (state, action) => {
+      state.completedTodo = action.payload;
+    },
     addTodo: (state, action) => {
       const newTodo = action.payload;
 
       state.todoList.push({
-        _id: (Math.random() * 10).toString(),
+        _id: newTodo._id,
         title: newTodo.title,
         description: newTodo.description,
         status: newTodo.status,
@@ -28,10 +31,12 @@ const todoSlice = createSlice({
         (item) => item._id === completedTaskId
       );
       if (completedTask) {
+        completedTask.status = "completed";
         state.completedTodo.push(completedTask);
-        state.todoList = state.todoList.filter(
-          (item) => item._id !== action.payload
-        );
+
+        // state.todoList = state.todoList.filter(
+        //   (item) => item._id !== action.payload
+        // );
       }
     },
   },

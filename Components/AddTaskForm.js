@@ -31,9 +31,12 @@ const AddTaskForm = (props) => {
       if (!res.ok) {
         throw new Error("invalid");
       }
+      const result = await res.json();
+      console.log(result);
 
       dispatch(
         todoSliceActions.addTodo({
+          _id: result._id,
           title: title,
           description: description,
           status: "inComplete",

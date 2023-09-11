@@ -1,5 +1,5 @@
 import { ConnectionStr } from "@/Components/db";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request) {
@@ -23,8 +23,14 @@ export async function POST(req) {
   const client = await MongoClient.connect(ConnectionStr);
   const db = client.db();
   const todoCollection = db.collection("todoList");
-  await todoCollection.insertOne({ title, description, status });
+  const newTodo = {
+    title,
+    description,
+    status,
+    _id: new ObjectId(),
+  };
+  await todoCollection.insertOne(newTodo);
   client.close();
 
-  return NextResponse.json({ title, description, status }, { status: 201 });
+  return NextResponse.json(newTodo, { status: 201 });
 }

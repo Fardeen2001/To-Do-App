@@ -1,9 +1,34 @@
 "use client";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import { todoSliceActions } from "@/ReduxStore/todo";
+
 const Completed = () => {
   const completedTodoList = useSelector((state) => state.todo.completedTodo);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const FetchCompletedTodo = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/completed", {
+          next: { revalidate: 0 },
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          throw new Error("invalid while fetching");
+        }
+        const result = await res.json();
+        console.log(result.completed);
+        dispatch(todoSliceActions.replaceCompletedTodo(result.completed));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    FetchCompletedTodo();
+  }, [dispatch]);
+
   const current = new Date();
   const date = `${current.getDate()}/${
     current.getMonth() + 1
@@ -29,7 +54,10 @@ const Completed = () => {
                   key={item.id}
                   className="flex justify-between items-center bg-indigo-100 p-2 rounded-lg mt-2"
                 >
-                  <div className="inline-flex items-center space-x-3">
+                  <div
+                    key={item.id}
+                    className="inline-flex items-center space-x-3"
+                  >
                     <h3 className="overflow-hidden  text-ellipsis">
                       {item.title}
                     </h3>
