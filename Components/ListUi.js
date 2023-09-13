@@ -136,9 +136,6 @@ const ListUi = (props) => {
                     </p>
                   </div>
                   <div className="buttons flex items-center space-x-2">
-                    <button>
-                      <BiSolidEditAlt />
-                    </button>
                     <button
                       onClick={() => {
                         dispatch(todoSliceActions.deleteTodo(item._id));
