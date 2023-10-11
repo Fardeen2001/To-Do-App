@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { BiSolidEditAlt } from "react-icons/bi";
 import AddTaskForm from "./AddTaskForm";
 import { useDispatch, useSelector } from "react-redux";
 import { todoSliceActions } from "@/ReduxStore/todo";
@@ -26,10 +25,13 @@ const ListUi = (props) => {
   }, [dispatch, props.todoData]);
   const deleteHandler = async (id) => {
     try {
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "DELETE",
-        cache: "no-cache",
-      });
+      const res = await fetch(
+        `http://localhost:${window.location.port}/api/todos/${id}`,
+        {
+          method: "DELETE",
+          cache: "no-cache",
+        }
+      );
       if (!res.ok) {
         throw new Error("invaild while deleting");
       }
@@ -45,32 +47,38 @@ const ListUi = (props) => {
 
   const checkedHandler = async (item) => {
     try {
-      const response = await fetch(`/api/todos/${item._id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          status: "completed",
-        }),
-        headers: { "Content-Type": "application/json" },
-        next: { revalidate: 0 },
-        cache: "no-cache",
-      });
+      const response = await fetch(
+        `http://localhost:${window.location.port}/api/todos/${item._id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            status: "completed",
+          }),
+          headers: { "Content-Type": "application/json" },
+          next: { revalidate: 0 },
+          cache: "no-cache",
+        }
+      );
       if (!response.ok) {
         throw new Error("invalid while putting");
       }
       if (response.ok) {
         try {
-          const res = await fetch("/api/completed", {
-            method: "POST",
-            body: JSON.stringify({
-              title: item.title,
-              description: item.description,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-            next: { revalidate: 0 },
-            cache: "no-cache",
-          });
+          const res = await fetch(
+            `http://localhost:${window.location.port}/api/completed`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                title: item.title,
+                description: item.description,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+              next: { revalidate: 0 },
+              cache: "no-cache",
+            }
+          );
           if (!res.ok) {
             throw new Error("invalid");
           }

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { todoSliceActions } from "@/ReduxStore/todo";
 
 const Completed = () => {
@@ -12,10 +12,13 @@ const Completed = () => {
   useEffect(() => {
     const FetchCompletedTodo = async () => {
       try {
-        const res = await fetch("/api/completed", {
-          next: { revalidate: 0 },
-          cache: "no-store",
-        });
+        const res = await fetch(
+          `http://localhost:${window.location.port}/api/completed`,
+          {
+            next: { revalidate: 0 },
+            cache: "no-store",
+          }
+        );
         if (!res.ok) {
           throw new Error("invalid while fetching");
         }

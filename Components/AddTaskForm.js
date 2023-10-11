@@ -16,18 +16,21 @@ const AddTaskForm = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/todo", {
-        method: "POST",
-        body: JSON.stringify({
-          title: title,
-          description: description,
-          status: "inComplete",
-        }),
-        next: { revalidate: 0 },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `http://localhost:${window.location.port}/api/todo`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            title: title,
+            description: description,
+            status: "inComplete",
+          }),
+          next: { revalidate: 0 },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (!res.ok) {
         throw new Error("invalid");
       }

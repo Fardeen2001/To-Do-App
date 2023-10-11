@@ -2,7 +2,7 @@ import ListUi from "@/Components/ListUi";
 
 const GetList = async () => {
   try {
-    const res = await fetch("/api/todo", {
+    const res = await fetch(`http://localhost:${process.env.PORT}/api/todo`, {
       cache: "no-cache",
     });
     if (!res.ok) {
@@ -13,10 +13,10 @@ const GetList = async () => {
     console.log(error.message);
   }
 };
-async function Home(props) {
+async function Home() {
   const todoData = await GetList();
 
-  return <ListUi todoData={todoData.result} />;
+  return todoData.result && <ListUi todoData={todoData.result} />;
 }
 
 export default Home;
