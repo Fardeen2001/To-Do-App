@@ -12,7 +12,7 @@ const Completed = () => {
   useEffect(() => {
     const FetchCompletedTodo = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/completed", {
+        const res = await fetch("/api/completed", {
           next: { revalidate: 0 },
           cache: "no-store",
         });
@@ -20,7 +20,6 @@ const Completed = () => {
           throw new Error("invalid while fetching");
         }
         const result = await res.json();
-        console.log(result.completed);
         dispatch(todoSliceActions.replaceCompletedTodo(result.completed));
       } catch (error) {
         console.error(error);

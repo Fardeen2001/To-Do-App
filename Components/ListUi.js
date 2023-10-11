@@ -26,7 +26,7 @@ const ListUi = (props) => {
   }, [dispatch, props.todoData]);
   const deleteHandler = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/todos/${id}`, {
+      const res = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
         cache: "no-cache",
       });
@@ -45,24 +45,21 @@ const ListUi = (props) => {
 
   const checkedHandler = async (item) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/todos/${item._id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            status: "completed",
-          }),
-          headers: { "Content-Type": "application/json" },
-          next: { revalidate: 0 },
-          cache: "no-cache",
-        }
-      );
+      const response = await fetch(`/api/todos/${item._id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          status: "completed",
+        }),
+        headers: { "Content-Type": "application/json" },
+        next: { revalidate: 0 },
+        cache: "no-cache",
+      });
       if (!response.ok) {
         throw new Error("invalid while putting");
       }
       if (response.ok) {
         try {
-          const res = await fetch("http://localhost:3000/api/completed", {
+          const res = await fetch("/api/completed", {
             method: "POST",
             body: JSON.stringify({
               title: item.title,
