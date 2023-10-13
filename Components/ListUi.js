@@ -25,13 +25,10 @@ const ListUi = (props) => {
   }, [dispatch, props.todoData]);
   const deleteHandler = async (id) => {
     try {
-      const res = await fetch(
-        `http://localhost:${window.location.port}/api/todos/${id}`,
-        {
-          method: "DELETE",
-          cache: "no-cache",
-        }
-      );
+      const res = await fetch(`http://localhost:3000/api/todos/${id}`, {
+        method: "DELETE",
+        cache: "no-cache",
+      });
       if (!res.ok) {
         throw new Error("invaild while deleting");
       }
@@ -48,7 +45,7 @@ const ListUi = (props) => {
   const checkedHandler = async (item) => {
     try {
       const response = await fetch(
-        `http://localhost:${window.location.port}/api/todos/${item._id}`,
+        `http://localhost:3000/api/todos/${item._id}`,
         {
           method: "PUT",
           body: JSON.stringify({
@@ -64,21 +61,18 @@ const ListUi = (props) => {
       }
       if (response.ok) {
         try {
-          const res = await fetch(
-            `http://localhost:${window.location.port}/api/completed`,
-            {
-              method: "POST",
-              body: JSON.stringify({
-                title: item.title,
-                description: item.description,
-              }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-              next: { revalidate: 0 },
-              cache: "no-cache",
-            }
-          );
+          const res = await fetch(`http://localhost:3000/api/completed`, {
+            method: "POST",
+            body: JSON.stringify({
+              title: item.title,
+              description: item.description,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            next: { revalidate: 0 },
+            cache: "no-cache",
+          });
           if (!res.ok) {
             throw new Error("invalid");
           }

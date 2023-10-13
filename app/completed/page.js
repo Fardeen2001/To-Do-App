@@ -12,13 +12,10 @@ const Completed = () => {
   useEffect(() => {
     const FetchCompletedTodo = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:${window.location.port}/api/completed`,
-          {
-            next: { revalidate: 0 },
-            cache: "no-store",
-          }
-        );
+        const res = await fetch(`http://localhost:3000/api/completed`, {
+          next: { revalidate: 0 },
+          cache: "no-store",
+        });
         if (!res.ok) {
           throw new Error("invalid while fetching");
         }

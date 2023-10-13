@@ -2,7 +2,7 @@ import ListUi from "@/Components/ListUi";
 
 const GetList = async () => {
   try {
-    const res = await fetch(`http://localhost:${process.env.PORT}/api/todo`, {
+    const res = await fetch(`http://localhost:3000/api/todo`, {
       cache: "no-cache",
     });
     if (!res.ok) {
